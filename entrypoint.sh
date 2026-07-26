@@ -18,10 +18,10 @@ echo "Running migrations..."
 python manage.py migrate --noinput
 
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput || true
 
 echo "Seeding assets..."
 python manage.py seed_assets 2>/dev/null || echo "Seed command skipped or already seeded."
 
 echo "Starting Daphne (ASGI) server..."
-exec daphne -b 0.0.0.0 -p 8000 fintech_backend.asgi:application
+exec daphne -b 0.0.0.0 -p ${PORT:-8000} fintech_backend.asgi:application
