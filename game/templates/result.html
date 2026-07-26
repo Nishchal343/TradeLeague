@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Game Results - TradeLeague{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="mb-10 text-center">
+        <h1 class="text-lg neon-gold mb-2">GAME RESULTS</h1>
+        <p class="text-[8px] text-gray-500 uppercase tracking-wider">Review investments and performance</p>
+    </div>
+
+    <div class="pixel-card p-6 mb-6 text-center">
+        {% if result_context.is_draw %}
+            <h2 class="text-lg neon-cyan mb-3">DRAW</h2>
+            <p class="text-[9px] text-gray-400">Both players finished with the same profit.</p>
+        {% elif result_context.did_win %}
+            <h2 class="text-lg neon-green mb-3">YOU WIN</h2>
+            <p class="text-[9px] text-gray-400">Your profit beat your opponent this round.</p>
+        {% else %}
+            <h2 class="text-lg text-[#ff005c] mb-3 font-bold">YOU LOSE</h2>
+            <p class="text-[9px] text-gray-400">Your opponent made more profit this round.</p>
+        {% endif %}
+
+        <div class="grid grid-cols-2 gap-4 mt-5">
+            <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-4">
+                <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Your Profit</p>
+                <p class="text-sm {% if result_context.current_user_profit >= 0 %}neon-green{% else %}text-[#ff005c]{% endif %} font-bold">
+                    Rs {{ result_context.current_user_profit|floatformat:2 }}
+                </p>
+            </div>
+            <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-4">
+                <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Opponent Profit</p>
+                <p class="text-sm {% if result_context.opponent_profit >= 0 %}neon-green{% else %}text-[#ff005c]{% endif %} font-bold">
+                    Rs {{ result_context.opponent_profit|floatformat:2 }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left Column: Investments List -->
+        <div class="lg:col-span-2">
+            <div class="pixel-card p-6">
+                <h2 class="text-sm neon-cyan mb-5 flex items-center gap-2">
+                    INVESTMENT SUMMARY
+                </h2>
+
+                {% if invs %}
+                    <div class="space-y-3">
+                        {% for investment in invs %}
+                            <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-5 hover:border-[#00e5ff33] transition">
+                                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                    <div>
+                                        <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Trader</p>
+                                        <p class="text-[9px] text-white font-bold">{{ investment.player.username }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Asset</p>
+                                        <p class="text-[9px] neon-cyan font-bold">{{ investment.asset.name }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Invested</p>
+                                        <p class="text-[9px] neon-green font-bold">₹{{ investment.amount|floatformat:2 }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Growth</p>
+                                        {% if investment.asset.growth_percent > 0 %}
+                                            <p class="text-[9px] neon-green font-bold">
+                                                +{{ investment.asset.growth_percent|floatformat:1 }}%
+                                            </p>
+                                        {% elif investment.asset.growth_percent < 0 %}
+                                            <p class="text-[9px] text-[#ff005c] font-bold">
+                                                {{ investment.asset.growth_percent|floatformat:1 }}%
+                                            </p>
+                                        {% else %}
+                                            <p class="text-[9px] text-gray-500 font-bold">0%</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <p class="text-[9px] text-gray-500">No investments recorded for this match.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column: Performance Analysis -->
+        <div class="lg:col-span-1">
+            <div class="pixel-card p-6 sticky top-24">
+                <h2 class="text-sm neon-gold mb-5 flex items-center gap-2">
+                    ANALYSIS
+                </h2>
+
+                {% if analysis %}
+                    <div class="space-y-3">
+                        <!-- Good Decisions -->
+                        <div class="bg-[#00ff8810] border border-[#00ff8833] p-4">
+                            <p class="text-[7px] neon-green uppercase tracking-wider mb-1">Good Decisions</p>
+                            <p class="text-xl neon-green font-bold">
+                                {{ analysis.good_decisions|default:"0" }}
+                            </p>
+                        </div>
+
+                        <!-- Bad Decisions -->
+                        <div class="bg-[#ff005c10] border border-[#ff005c33] p-4">
+                            <p class="text-[7px] text-[#ff005c] uppercase tracking-wider mb-1">Bad Decisions</p>
+                            <p class="text-xl text-[#ff005c] font-bold">
+                                {{ analysis.bad_decisions|default:"0" }}
+                            </p>
+                        </div>
+
+                        <!-- Diversification -->
+                        <div class="bg-[#00e5ff10] border border-[#00e5ff33] p-4">
+                            <p class="text-[7px] neon-cyan uppercase tracking-wider mb-1">Diversification</p>
+                            <div class="flex items-end space-x-2">
+                                <p class="text-xl neon-cyan font-bold">
+                                    {{ analysis.diversification_score|default:"0"|floatformat:1 }}
+                                </p>
+                                <p class="text-[8px] text-gray-500">/10</p>
+                            </div>
+                        </div>
+
+                        <!-- Risk Behavior -->
+                        <div class="bg-[#ffd70010] border border-[#ffd70033] p-4">
+                            <p class="text-[7px] neon-gold uppercase tracking-wider mb-1">Risk Behavior</p>
+                            <p class="text-[10px] text-white font-bold uppercase">
+                                {{ analysis.risk_behavior|default:"Neutral" }}
+                            </p>
+                        </div>
+
+                        <!-- Total Gain -->
+                        {% if analysis.total_gain %}
+                            <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-4">
+                                <p class="text-[7px] text-gray-600 uppercase tracking-wider mb-1">Total Gain/Loss</p>
+                                {% if analysis.total_gain > 0 %}
+                                    <p class="text-sm neon-green font-bold">
+                                        +₹{{ analysis.total_gain|floatformat:2 }}
+                                    </p>
+                                {% elif analysis.total_gain < 0 %}
+                                    <p class="text-sm text-[#ff005c] font-bold">
+                                        -₹{{ analysis.total_gain|floatformat:2 }}
+                                    </p>
+                                {% else %}
+                                    <p class="text-sm text-gray-500 font-bold">₹0.00</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Feedback -->
+                    <div class="bg-[#b44dff10] border border-[#b44dff33] p-4 mt-4">
+                        <p class="text-[8px] text-[#b44dff] font-bold mb-2">FEEDBACK</p>
+                        <p class="text-[8px] text-gray-400 leading-relaxed">
+                            {% if result_context.user_investment_count == 0 %}
+                                You did not invest in any asset, so you missed every profit opportunity.
+                            {% elif result_context.weak_picks %}
+                                Your weaker picks were {{ result_context.weak_picks|join:", " }}. These assets had negative growth, so they pulled your score down.
+                            {% elif result_context.missed_growth %}
+                                You picked growing assets, but invested lightly in {{ result_context.missed_growth|join:", " }}. Consider sizing up when the signal is strong.
+                            {% elif analysis.risk_behavior == 'aggressive' %}
+                                You took too much concentrated risk. Try spreading capital across more assets next round.
+                            {% else %}
+                                Your choices were balanced. To improve, compare growth, risk level, and chart signals before placing larger orders.
+                            {% endif %}
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <p class="text-[9px] text-gray-500">Analysis processing...</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-10 justify-center">
+        <a href="{% url 'dashboard' %}"
+           class="pixel-btn pixel-btn-cyan px-8 py-3 text-[9px] font-bold text-center rounded-none">
+            BACK TO DASHBOARD
+        </a>
+        <a href="{% url 'lobby' %}"
+           class="pixel-btn pixel-btn-outline px-8 py-3 text-[9px] font-bold text-center rounded-none">
+            PLAY AGAIN
+        </a>
+    </div>
+
+</div>
+{% endblock %}

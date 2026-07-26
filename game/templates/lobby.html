@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Join Game - TradeLeague{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-8">
+
+    <div class="mb-10">
+        <h1 class="text-lg neon-cyan mb-2">JOIN GAME</h1>
+        <p class="text-[8px] text-gray-600 uppercase tracking-wider">Join by friend code or find an open public match</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+        <div class="pixel-card p-6">
+            <h2 class="text-sm neon-green mb-2">HOST GAME</h2>
+            <p class="text-[8px] text-gray-500 mb-6">Create a private code room or a public room visible to other players.</p>
+
+            <a href="{% url 'create_room' %}"
+               class="pixel-btn pixel-btn-green block w-full py-3 text-[9px] font-bold text-center rounded-none">
+                CREATE ROOM
+            </a>
+        </div>
+
+        <div class="pixel-card p-6">
+            <h2 class="text-sm neon-cyan mb-2">ENTER ROOM CODE</h2>
+            <p class="text-[8px] text-gray-500 mb-6">Ask the host for the code, then join their waiting room.</p>
+
+            {% if error %}
+                <div class="bg-[#ff005c10] border-2 border-[#ff005c55] p-4 mb-5">
+                    <p class="text-[8px] text-[#ff5f91] font-bold">{{ error }}</p>
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <div>
+                    <label for="{{ form.room_code.id_for_label }}"
+                           class="block text-[8px] text-gray-500 mb-2 uppercase tracking-wider">
+                        &gt; Room Code
+                    </label>
+                    {{ form.room_code }}
+                    {% if form.room_code.errors %}
+                        <p class="text-[7px] text-[#ff5f91] mt-2">{{ form.room_code.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit"
+                        class="pixel-btn pixel-btn-cyan block w-full py-3 text-[9px] font-bold rounded-none">
+                    JOIN GAME
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="pixel-card p-6">
+        <h2 class="text-sm neon-gold mb-2">PUBLIC ROOMS</h2>
+        <p class="text-[8px] text-gray-500 mb-6">Open rooms waiting for a second player. Private rooms never appear here.</p>
+
+        {% if public_rooms %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for room in public_rooms %}
+                    <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-5">
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div>
+                                <p class="text-[7px] text-gray-600 uppercase">Host</p>
+                                <p class="text-[9px] text-white font-bold">{{ room.host.username }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[7px] text-gray-600 uppercase">Duration</p>
+                                <p class="text-[9px] neon-cyan font-bold">{{ room.trade_duration }} MIN</p>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'join_public_room' room.id %}"
+                           class="pixel-btn pixel-btn-green block w-full py-3 text-[9px] font-bold text-center rounded-none">
+                            JOIN PUBLIC ROOM
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-[#0a0a0f] border-2 border-[#2a2a3a] p-6 text-center">
+                <p class="text-[9px] text-gray-500">No public rooms are open right now.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

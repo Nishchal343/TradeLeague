@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Register - TradeLeague{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-120px)]">
+    <div class="w-full max-w-md px-4">
+        <div class="pixel-card rounded-none p-8">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-lg mb-1">
+                    <span class="neon-cyan">SIGN UP</span>
+                </h1>
+                <div class="w-20 h-[2px] bg-[#00e5ff] mx-auto mt-2 opacity-50"></div>
+            </div>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-[8px] text-gray-500 mb-2 uppercase tracking-wider">
+                        &gt; Choose Username
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="{{ form.username.id_for_label }}"
+                        placeholder="player_name"
+                        class="w-full px-4 py-3 rounded-none"
+                        required
+                    />
+                    {% if form.username.errors %}
+                        <p class="neon-magenta text-[8px] mt-1">{{ form.username.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-[8px] text-gray-500 mb-2 uppercase tracking-wider">
+                        &gt; Set Password
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="{{ form.password.id_for_label }}"
+                        placeholder="••••••••"
+                        class="w-full px-4 py-3 rounded-none"
+                        required
+                    />
+                    {% if form.password.errors %}
+                        <p class="neon-magenta text-[8px] mt-1">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="border-2 border-[#ff005c] bg-[#ff005c]/10 p-3">
+                        {% for error in form.non_field_errors %}
+                            <p class="neon-magenta text-[8px]">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <button type="submit" 
+                    class="pixel-btn pixel-btn-cyan w-full py-3 text-[9px] font-bold rounded-none">
+                    + CREATE ACCOUNT
+                </button>
+            </form>
+
+            <div class="my-6 flex items-center">
+                <div class="flex-1 border-t-2 border-[#2a2a3a]"></div>
+                <span class="px-3 text-gray-600 text-[8px]">OR</span>
+                <div class="flex-1 border-t-2 border-[#2a2a3a]"></div>
+            </div>
+
+            <p class="text-center text-gray-500 text-[8px]">
+                Already a trader? 
+                <a href="{% url 'login' %}" class="neon-green hover:underline">
+                    LOGIN HERE
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

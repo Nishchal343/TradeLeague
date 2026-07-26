@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Login - TradeLeague{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-120px)]">
+    <div class="w-full max-w-md px-4">
+        <div class="pixel-card rounded-none p-8">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-lg mb-1">
+                    <span class="neon-green">LOGIN</span>
+                </h1>
+                <div class="w-20 h-[2px] bg-[#00ff88] mx-auto mt-2 opacity-50"></div>
+            </div>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-[8px] text-gray-500 mb-2 uppercase tracking-wider">
+                        &gt; Username
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="{{ form.username.id_for_label }}"
+                        placeholder="enter_username"
+                        autocomplete="on"
+                        class="w-full px-4 py-3 rounded-none"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-[8px] text-gray-500 mb-2 uppercase tracking-wider">
+                        &gt; Password
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="{{ form.password.id_for_label }}"
+                        placeholder="••••••••"
+                        autocomplete="off"
+                        class="w-full px-4 py-3 rounded-none"
+                        required
+                    />
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="border-2 border-[#ff005c] bg-[#ff005c]/10 p-3">
+                        {% for error in form.non_field_errors %}
+                            <p class="neon-magenta text-[8px]">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <button type="submit" 
+                    class="pixel-btn pixel-btn-green w-full py-3 text-[9px] font-bold rounded-none">
+                    ENTER GAME
+                </button>
+            </form>
+
+            <div class="my-6 flex items-center">
+                <div class="flex-1 border-t-2 border-[#2a2a3a]"></div>
+                <span class="px-3 text-gray-600 text-[8px]">OR</span>
+                <div class="flex-1 border-t-2 border-[#2a2a3a]"></div>
+            </div>
+
+            <p class="text-center text-gray-500 text-[8px]">
+                New player? 
+                <a href="{% url 'register' %}" class="neon-cyan hover:underline">
+                    REGISTER HERE
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

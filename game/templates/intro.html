@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TradeLeague</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        * { font-family: 'Press Start 2P', cursive !important; }
+
+        .grid-bg {
+            background-image:
+                linear-gradient(to right, rgba(0,255,136,0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,255,136,0.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 8s linear infinite;
+        }
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 80px 80px; }
+        }
+
+        .neon-green { color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.3); }
+        .neon-cyan { color: #00e5ff; text-shadow: 0 0 20px rgba(0,229,255,0.6); }
+
+        .scanlines::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .pixel-card {
+            background: #12121a;
+            border: 4px solid #2a2a3a;
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.5), 0 0 60px rgba(0,255,136,0.08);
+        }
+
+        .chart-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            opacity: 0.3;
+            animation: chartWave 6s ease-in-out infinite;
+        }
+        .chart-line:nth-child(1) { top: 30%; width: 200%; left: -50%; animation-duration: 10s; }
+        .chart-line:nth-child(2) { top: 50%; width: 200%; left: -50%; animation-duration: 14s; animation-delay: 2s; }
+        .chart-line:nth-child(3) { top: 70%; width: 200%; left: -50%; animation-duration: 18s; animation-delay: 4s; opacity: 0.15; }
+        @keyframes chartWave {
+            0% { transform: translateX(-30%) scaleY(1); }
+            50% { transform: translateX(30%) scaleY(3); }
+            100% { transform: translateX(-30%) scaleY(1); }
+        }
+
+        .pixel-btn {
+            border: 3px solid;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.15s;
+        }
+        .pixel-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .pixel-btn:active { transform: translateY(1px); }
+
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .blink { animation: blink 1.5s infinite; }
+
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .float { animation: float 4s ease-in-out infinite; }
+    </style>
+</head>
+
+<body class="relative min-h-screen overflow-hidden bg-[#0a0a0f] text-white scanlines grid-bg">
+
+    <!-- Animated chart lines -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="chart-line"></div>
+        <div class="chart-line"></div>
+        <div class="chart-line"></div>
+    </div>
+
+    <!-- Corner decorations -->
+    <div class="absolute top-6 left-6 text-[8px] text-gray-600">SYS:ONLINE</div>
+    <!-- Main Card -->
+    <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+        <div class="pixel-card rounded-none px-12 py-14 text-center max-w-xl w-full">
+
+            <!-- Pixel art coins -->
+            <div class="text-xl mb-6 float neon-green font-bold tracking-widest">$$$</div>
+
+            <!-- Title -->
+            <h1 class="text-2xl mb-2">
+                <span class="neon-green">TRADE</span><span class="neon-cyan">LEAGUE</span>
+            </h1>
+
+            <div class="w-32 h-1 bg-gradient-to-r from-transparent via-[#00ff88] to-transparent mx-auto my-4"></div>
+
+            <p class="text-gray-400 text-[9px] mb-10 leading-relaxed">
+                GAMIFIED VIRTUAL STOCK<br>TRADING LEAGUE
+            </p>
+
+            <!-- Stats bar -->
+            <div class="flex justify-center gap-6 mb-10 text-[7px]">
+                <div class="text-center">
+                    <div class="neon-green text-sm">9+</div>
+                    <div class="text-gray-500 mt-1">STOCKS</div>
+                </div>
+                <div class="text-gray-600">|</div>
+                <div class="text-center">
+                    <div class="neon-cyan text-sm">1v1</div>
+                    <div class="text-gray-500 mt-1">BATTLES</div>
+                </div>
+                <div class="text-gray-600">|</div>
+                <div class="text-center">
+                    <div style="color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5);" class="text-sm">₹0</div>
+                    <div class="text-gray-500 mt-1">REAL MONEY</div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="{% url 'login' %}"
+                   class="pixel-btn flex-1 py-4 rounded-none text-[10px] font-bold text-center"
+                   style="background:#00ff88; border-color:#00cc6a; color:#0a0a0f; box-shadow: 0 4px 0 #009950, 0 0 20px rgba(0,255,136,0.3);">
+                    LOGIN
+                </a>
+
+                <a href="{% url 'register' %}"
+                   class="pixel-btn flex-1 py-4 rounded-none text-[10px] font-bold text-center"
+                   style="background:transparent; border-color:#00e5ff; color:#00e5ff; box-shadow: 0 4px 0 #006677;">
+                    + SIGN UP
+                </a>
+            </div>
+
+            <p class="text-gray-600 text-[7px] mt-8">
+                NO REAL MONEY • REAL STRATEGY • REAL FUN
+            </p>
+        </div>
+    </div>
+</body>
+</html>
