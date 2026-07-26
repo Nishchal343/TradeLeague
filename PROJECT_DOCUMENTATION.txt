@@ -610,7 +610,7 @@ Before Production:
   ☐ Configure ALLOWED_HOSTS
   ☐ Set up CORS properly
   ☐ Use HTTPS only
-  ☐ Set up proper database (PostgreSQL)
+  ☐ Configure persistent storage for the SQLite database
   ☐ Collect static files
   ☐ Configure email backend
   ☐ Set up logging
@@ -627,7 +627,6 @@ Key Packages:
   - djangorestframework
   - djangorestframework-simplejwt
   - django-cors-headers
-  - python-decouple
   - Pillow (for image handling)
 
 

@@ -184,7 +184,7 @@ Frontend:
 - [ ] Update `ALLOWED_HOSTS`
 - [ ] Change `SECRET_KEY`
 - [ ] Update `CORS_ALLOWED_ORIGINS`
-- [ ] Use PostgreSQL database
+- [ ] Configure a persistent disk for SQLite data in production
 - [ ] Set up environment variables
 - [ ] Enable HTTPS
 - [ ] Use production WSGI server

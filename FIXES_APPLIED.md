@@ -171,7 +171,7 @@ docker-compose up
 2. Update `ALLOWED_HOSTS` to specific domains
 3. Change `SECRET_KEY`
 4. Update `CORS_ALLOWED_ORIGINS`
-5. Use PostgreSQL or other production database
+5. Keep SQLite and use a persistent deployment disk when production data must survive restarts
 6. Use environment variables for sensitive data
 7. Enable HTTPS
 8. Set up proper authentication tokens

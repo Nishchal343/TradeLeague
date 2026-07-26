@@ -74,6 +74,23 @@
 
 <body class="relative min-h-screen overflow-hidden bg-[#0a0a0f] text-white scanlines grid-bg">
 
+    <script>
+        (function () {
+            const authKey = "tradeleague_authenticated";
+            const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+            if (isAuthenticated || sessionStorage.getItem(authKey) === "true") {
+                window.location.replace("{% url 'dashboard' %}");
+            }
+
+            window.addEventListener("pageshow", function () {
+                if (sessionStorage.getItem(authKey) === "true") {
+                    window.location.replace("{% url 'dashboard' %}");
+                }
+            });
+        })();
+    </script>
+
     <!-- Animated chart lines -->
     <div class="absolute inset-0 overflow-hidden">
         <div class="chart-line"></div>
@@ -88,7 +105,7 @@
         <div class="pixel-card rounded-none px-12 py-14 text-center max-w-xl w-full">
 
             <!-- Pixel art coins -->
-            <div class="text-xl mb-6 float neon-green font-bold tracking-widest">$$$</div>
+            <div class="text-xl mb-6 float neon-green font-bold tracking-widest">₹₹₹</div>
 
             <!-- Title -->
             <h1 class="text-2xl mb-2">

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from datetime import timedelta
@@ -10,6 +11,7 @@ from .analysis import analyze
 
 # ---------- INTRO ----------
 
+@never_cache
 def intro(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
@@ -18,7 +20,11 @@ def intro(request):
 
 # ---------- AUTH ----------
 
+@never_cache
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
     form = RegisterForm(request.POST or None)
     if form.is_valid():
         user = form.save(commit=False)
@@ -28,7 +34,11 @@ def register_view(request):
     return render(request, "register.html", {"form": form})
 
 
+@never_cache
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
     form = LoginForm(request.POST or None)
     if form.is_valid():
         user = authenticate(
@@ -43,7 +53,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("intro")
 
 
 # ---------- DASHBOARD ----------

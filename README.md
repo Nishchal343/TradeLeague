@@ -47,4 +47,39 @@ NithinLimited: Heavily impacted by quarterly earnings reports and supply chain l
 Digital Gold: Acts as a safe haven during periods of simulated market volatility.
 TechNova: Highly sensitive to regulatory news and patent approvals.
 Future Integration: ML Performance Analysis
-After the game concludes, we have reserved a module for a Machine Learning engine. This feature will analyze the player's choices versus the information provided, offering a "post-game breakdown." It will identify whether a player’s losses were due to over-leveraging or misinterpreting the news, providing a genuine educational feedback loop.
+After the game concludes, we have reserved a module for a Machine Learning engine. This feature will analyze the player's choices versus the information provided, offering a "post-game breakdown." It will identify whether a playerâ€™s losses were due to over-leveraging or misinterpreting the news, providing a genuine educational feedback loop.
+
+## Local setup
+
+This project uses Django with SQLite. No external database is required.
+
+```bash
+python -m venv .venv
+# Windows: .venv\\Scripts\\activate
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic --noinput
+python manage.py runserver
+```
+
+Open `http://127.0.0.1:8000/`. The required local variable is `SECRET_KEY`; `DEBUG`, `ALLOWED_HOSTS`, and `CSRF_TRUSTED_ORIGINS` are also supported.
+
+## Docker setup
+
+```bash
+docker compose up --build
+```
+
+The application is served on `http://127.0.0.1:8000/` and stores its SQLite database in `db.sqlite3`. The production compose file also includes the optional Redis channel layer and Nginx static-file proxy.
+
+## Render deployment
+
+The included `render.yaml` defines a Python web service. Connect the repository in Render and use the Blueprint flow, or create a Python web service with these commands:
+
+- Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput`
+- Start: `daphne -b 0.0.0.0 -p $PORT fintech_backend.asgi:application`
+
+Required environment variables are `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS=.onrender.com`, and `CSRF_TRUSTED_ORIGINS=https://*.onrender.com`. `CORS_ALLOW_ALL_ORIGINS=False` is recommended; set `CORS_ALLOWED_ORIGINS` when needed. `REDIS_URL` is optional because Channels falls back to an in-memory layer.
+
+SQLite remains the configured database. Render’s default web-service filesystem is ephemeral, so a persistent disk is required if production data must survive redeploys or restarts; adding an external database is intentionally outside this project’s configuration.

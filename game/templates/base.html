@@ -180,6 +180,26 @@
 
 <body class="bg-pixel-bg text-gray-300 scanlines grid-bg">
 
+<script>
+    (function () {
+        const authKey = "tradeleague_authenticated";
+        const publicPaths = ["/", "/login/", "/register/"];
+        const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+        if (isAuthenticated) {
+            sessionStorage.setItem(authKey, "true");
+        } else if (publicPaths.includes(window.location.pathname) && sessionStorage.getItem(authKey) === "true") {
+            window.location.replace("{% url 'dashboard' %}");
+        }
+
+        window.addEventListener("pageshow", function () {
+            if (!isAuthenticated && publicPaths.includes(window.location.pathname) && sessionStorage.getItem(authKey) === "true") {
+                window.location.replace("{% url 'dashboard' %}");
+            }
+        });
+    })();
+</script>
+
 {% if user.is_authenticated %}
 <!-- ================= TICKER TAPE ================= -->
 <div class="bg-pixel-card border-b-2 border-pixel-border overflow-hidden py-1">
@@ -236,6 +256,7 @@
                     ?
                 </a>
                 <a href="{% url 'logout' %}"
+                   onclick="event.preventDefault(); sessionStorage.removeItem('tradeleague_authenticated'); window.location.replace(this.href);"
                    class="pixel-btn pixel-btn-magenta px-3 py-1 text-[8px] rounded">
                     LOGOUT
                 </a>
@@ -251,5 +272,11 @@
 </main>
 
 {% block extra_js %}{% endblock %}
+{% if user.is_authenticated %}
+<script>
+    // Keep the authenticated destination as a replacement entry.
+    window.history.replaceState({authenticated: true}, document.title, window.location.href);
+</script>
+{% endif %}
 </body>
 </html>
