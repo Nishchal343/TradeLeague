@@ -24,12 +24,14 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,http://127.0.0.1,https://tradeleague-vk4b.onrender.com"
+).split(",")
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     "CSRF_TRUSTED_ORIGINS",
-    "http://localhost,http://127.0.0.1",
-    "https://tradeleague-vk4b.onrender.com",
+    "http://localhost,http://127.0.0.1,https://tradeleague-vk4b.onrender.com"
 ).split(",")
 
 # --------------------------------------------------
