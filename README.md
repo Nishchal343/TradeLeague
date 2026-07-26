@@ -134,18 +134,6 @@ CORS_ALLOWED_ORIGINS
 
 ---
 
-## Screenshots
-
-Add screenshots here:
-
-- Home Page
-- Login
-- Dashboard
-- Trading Lobby
-- Trading Arena
-- Match Results
-
----
 
 ## Future Improvements
 
