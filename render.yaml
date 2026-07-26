@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: tradeleague
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "localhost,127.0.0.1"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://tradeleague-vk4b.onrender.com"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://tradeleague-vk4b.onrender.com"
+      - key: PORT
+        value: "8000"
