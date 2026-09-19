@@ -24,8 +24,7 @@ def create_room(request):
     code = get_random_string(6)
     room = GameRoom.objects.create(
         room_code=code,
-        host=request.user,
-        mode=request.data.get("mode","stock")
+        host=request.user
     )
     return Response(GameRoomSerializer(room).data)
 
