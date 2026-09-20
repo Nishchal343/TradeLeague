@@ -1,10 +1,9 @@
 # Trade League
 
-Trade League is a real-time, head-to-head virtual trading game built with Django Channels. Players compete in room-based matches by making virtual investments and comparing their simulated profit and loss.
+Trade League is a head-to-head virtual trading game built with Django. Players compete in room-based matches by making virtual investments and comparing their simulated profit and loss.
 
 ## Features
 
-- Room-scoped WebSocket messaging for real-time matches.
 - Private rooms with room codes and public rooms available for opponents.
 - Match durations of 5, 10, and 15 minutes.
 - Deterministic profit-and-loss simulation using seeded randomness.
@@ -22,10 +21,9 @@ Trade League is a real-time, head-to-head virtual trading game built with Django
 flowchart LR
     A[Create or join a room] --> B[Choose a match duration]
     B --> C[Make virtual investments]
-    C --> D[Real-time room messaging]
-    D --> E[Deterministic P&L simulation]
-    E --> F[Dashboard and leaderboard]
-    F --> G[League tier update]
+    C --> D[Deterministic P&L simulation]
+    D --> E[Dashboard and leaderboard]
+    E --> F[League tier update]
 ```
 
 At the end of a match, the simulation uses a seeded random sequence together with each asset's growth and risk values. The selected match duration applies a corresponding time factor, producing repeatable profit-and-loss results for the same inputs.
@@ -58,21 +56,10 @@ The gameplay flow is exposed through 10 REST API endpoints under `/api/`:
 | GET | `/api/me/` | Return the authenticated player's summary. |
 | GET | `/api/health/` | Return the service health response. |
 
-## Real-Time Communication
-
-Room updates use Django Channels through the WebSocket route:
-
-```text
-ws/room/<code>/
-```
-
-Messages are scoped to the room so players receive updates from their current match.
-
 ## Technology
 
 - Python and Django
 - Django REST Framework
-- Django Channels and ASGI
 - TradingView chart integration
 - Docker
 - Render deployment
